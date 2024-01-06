@@ -7,8 +7,6 @@ public class A_PlayerMovement : MonoBehaviour
     private Camera _camera;
     private Vector3[] _targetPath;
     private int _indexPath = 0;
-    public GameObject testObject;
-    public LayerMask layerMask;
 
     private void Start()
     {
