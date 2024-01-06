@@ -12,7 +12,8 @@ public class A_PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        _camera = Camera.main;
+        if (_camera == null && Camera.main != null)
+            _camera = Camera.main;
     }
 
     private void Update()

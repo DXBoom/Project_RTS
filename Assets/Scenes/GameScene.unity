@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 237250082}
   - component: {fileID: 237250081}
   - component: {fileID: 237250080}
-  m_Layer: 4
+  m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -520,7 +520,7 @@ MonoBehaviour:
   testObject: {fileID: 8320467168509859695, guid: 21c145b617f90f84799b0cffb4728cb2, type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 16
+    m_Bits: 128
 --- !u!850595691 &1622640877
 LightingSettings:
   m_ObjectHideFlags: 0
