@@ -10,6 +10,7 @@ public class A_PlayerMovement : MonoBehaviour
     private int _indexPath = 0;
     public bool isNowPlayer;
     private Vector2 _randPos = Vector2.zero;
+    private Vector3 _lastMouseClick;
 
     private void Start()
     {
@@ -82,9 +83,16 @@ public class A_PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
         {
             Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
+            _lastMouseClick = newHitPoint;
             PathRequest pathRequest = new PathRequest(transform.position, newHitPoint, OnRequestReceived);
             A_Manager.Instance.Request(pathRequest);
         }
+    }
+    
+    private void SetNewTargetAfterNewObstacle()
+    {
+        PathRequest pathRequest = new PathRequest(transform.position, _lastMouseClick, OnRequestReceived);
+        A_Manager.Instance.Request(pathRequest);
     }
 
     private void CreateNewObstacle()
@@ -110,6 +118,8 @@ public class A_PlayerMovement : MonoBehaviour
             
             A_Manager.Instance.CalculateWorldMapBorders();
             A_Manager.Instance.GenerateGrid();
+            
+            SetNewTargetAfterNewObstacle();
         }
     }
     
