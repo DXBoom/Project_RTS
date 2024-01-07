@@ -14,6 +14,7 @@ public class A_Manager : MonoBehaviour
     [SerializeField] private Vector3 worldPosition;
     [SerializeField] private Vector3 worldSize;
     [SerializeField] private LayerMask obstacle;
+    public GameObject obstacleParent;
     public GameObject newObstacle;
 
     [Header("A* Settings")] [Space]

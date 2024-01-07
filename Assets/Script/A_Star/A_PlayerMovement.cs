@@ -92,7 +92,8 @@ public class A_PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
         {
             Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
-            Instantiate(A_Manager.Instance.newObstacle, newHitPoint, Quaternion.identity);
+            GameObject newObstacleCreated = Instantiate(A_Manager.Instance.newObstacle, newHitPoint, Quaternion.identity);
+            newObstacleCreated.transform.SetParent(A_Manager.Instance.obstacleParent.transform);
             A_Manager.Instance.CalculateWorldMapBorders();
             A_Manager.Instance.GenerateGrid();
         }
