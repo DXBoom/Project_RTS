@@ -1,17 +1,26 @@
+using System;
 using UnityEngine;
 
 public class Save_Load_Call : MonoBehaviour
 {
-    public Save_Object[] saveObject;
+    public static Save_Load_Call Instance;
     
+    public Save_Object_Obstacle[] saveObjectObstacle;
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
     public void Save()
     {
-        Save_Manager.Save(saveObject);
+        Save_Manager.Save(saveObjectObstacle);
     }
 
     public void Load()
     {
         All_Save_Objects allSaveObjects = Save_Manager.Load();
-        saveObject = allSaveObjects.allSaveObjects;
+        saveObjectObstacle = allSaveObjects.allSaveObjectsObstacle;
     }
 }

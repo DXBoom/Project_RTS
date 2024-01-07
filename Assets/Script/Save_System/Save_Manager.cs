@@ -6,9 +6,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 public static class Save_Manager
 {
     public static string directory = "SaveData";
-    public static string filename = "Save.txt";
+    public static string filename = "save.sav";
 
-    public static void Save(Save_Object[] sObject)
+    public static void Save(Save_Object_Obstacle[] sObject)
     {
         if (!DirectoryExist())
             Directory.CreateDirectory(Application.persistentDataPath + "/" + directory);

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class A_PlayerMovement : MonoBehaviour
 {
@@ -94,6 +95,18 @@ public class A_PlayerMovement : MonoBehaviour
             Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
             GameObject newObstacleCreated = Instantiate(A_Manager.Instance.newObstacle, newHitPoint, Quaternion.identity);
             newObstacleCreated.transform.SetParent(A_Manager.Instance.obstacleParent.transform);
+
+            var cachedArray = Save_Load_Call.Instance.saveObjectObstacle;
+            
+            Save_Load_Call.Instance.saveObjectObstacle = new Save_Object_Obstacle[Save_Load_Call.Instance.saveObjectObstacle.Length + 1];
+            Save_Load_Call.Instance.saveObjectObstacle[^1] = new Save_Object_Obstacle();
+            Save_Load_Call.Instance.saveObjectObstacle[^1].posX = newObstacleCreated.transform.position.x;
+            Save_Load_Call.Instance.saveObjectObstacle[^1].posY = newObstacleCreated.transform.position.y;
+            Save_Load_Call.Instance.saveObjectObstacle[^1].posZ = newObstacleCreated.transform.position.z;
+
+            for (int i = 0; i < Save_Load_Call.Instance.saveObjectObstacle.Length - 1; i++)
+                Save_Load_Call.Instance.saveObjectObstacle[i] = cachedArray[i];
+            
             A_Manager.Instance.CalculateWorldMapBorders();
             A_Manager.Instance.GenerateGrid();
         }

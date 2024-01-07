@@ -1861,10 +1861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f25307e6aae591240aa698962b30ffb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveObject:
-    posX: 0
-    posY: 0
-    posZ: 0
+  saveObjectObstacle: []
 --- !u!1 &1521410975
 GameObject:
   m_ObjectHideFlags: 0
