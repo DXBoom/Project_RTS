@@ -17,6 +17,10 @@ public class A_Manager : MonoBehaviour
     [Header("A* Settings")] [Space]
     [SerializeField] private bool multiThreading = false;
     [SerializeField] private float nodeYPos;
+
+    [Header("Player Data")] [Space] 
+    public Vector3 mainPlayerPos;
+    public bool mainPlayerMove;
     
     private float _biggerBorderX;
     private float _smallerBorderX;

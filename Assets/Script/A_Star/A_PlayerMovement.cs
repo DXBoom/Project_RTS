@@ -7,6 +7,8 @@ public class A_PlayerMovement : MonoBehaviour
     private Camera _camera;
     private Vector3[] _targetPath;
     private int _indexPath = 0;
+    public bool isNowPlayer;
+    private Vector2 _randPos = Vector2.zero;
 
     private void Start()
     {
@@ -16,18 +18,30 @@ public class A_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-            SetNewTarget();
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isNowPlayer)
+                A_Manager.Instance.mainPlayerMove = true;
+            
+            if (isNowPlayer)
+                SetNewTarget();
+        }
 
+        if (isNowPlayer)
+            A_Manager.Instance.mainPlayerPos = this.transform.position;
+        
+        if (!isNowPlayer && A_Manager.Instance.mainPlayerMove)
+            SetNewTargetFromAnotherUnits();
+        
         if(_targetPath == null )
             return;
-
+        
         MoveToTarget();
     }
 
     void MoveToTarget()
     {
-        if (_indexPath  >=  _targetPath.Length)
+        if (_indexPath >= _targetPath.Length)
             return;
 
         RotateToTarget(_targetPath[_indexPath]);
@@ -38,8 +52,16 @@ public class A_PlayerMovement : MonoBehaviour
         if (distanceToTheNextWayPoint < 0.05f)
             _indexPath++;
 
-        if(distanceToFinaltWayPoint < stoppingDistance)
+        if (distanceToFinaltWayPoint < stoppingDistance)
+        {
+            if (isNowPlayer)
+                A_Manager.Instance.mainPlayerMove = false;
+
+            if (!isNowPlayer && _randPos != Vector2.zero)
+                _randPos = Vector2.zero;
+            
             _indexPath = _targetPath.Length;
+        }
     }
 
     private void RotateToTarget(Vector3 target)
@@ -57,6 +79,17 @@ public class A_PlayerMovement : MonoBehaviour
             PathRequest pathRequest = new PathRequest(transform.position, newHitPoint, OnRequestReceived);
             A_Manager.Instance.Request(pathRequest);
         }
+    }
+    
+    private void SetNewTargetFromAnotherUnits()
+    {
+        if (_randPos == Vector2.zero)
+            _randPos = Random.insideUnitSphere * 5;
+        
+        Vector3 newHitPoint = new Vector3(A_Manager.Instance.mainPlayerPos.x + _randPos.x,
+            A_Manager.Instance.mainPlayerPos.y, A_Manager.Instance.mainPlayerPos.z + _randPos.y);
+        PathRequest pathRequest = new PathRequest(transform.position, newHitPoint, OnRequestReceived);
+        A_Manager.Instance.Request(pathRequest);
     }
 
     private void OnRequestReceived(Vector3[] path, bool succes)
