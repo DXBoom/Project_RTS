@@ -26,6 +26,11 @@ public class A_PlayerMovement : MonoBehaviour
             if (isNowPlayer)
                 SetNewTarget();
         }
+        
+        if (Input.GetMouseButtonDown(1) && isNowPlayer)
+        {
+            CreateNewObstacle();
+        }
 
         if (isNowPlayer)
             A_Manager.Instance.mainPlayerPos = this.transform.position;
@@ -78,6 +83,18 @@ public class A_PlayerMovement : MonoBehaviour
             Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
             PathRequest pathRequest = new PathRequest(transform.position, newHitPoint, OnRequestReceived);
             A_Manager.Instance.Request(pathRequest);
+        }
+    }
+
+    private void CreateNewObstacle()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+        {
+            Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
+            Instantiate(A_Manager.Instance.newObstacle, newHitPoint, Quaternion.identity);
+            A_Manager.Instance.CalculateWorldMapBorders();
+            A_Manager.Instance.GenerateGrid();
         }
     }
     

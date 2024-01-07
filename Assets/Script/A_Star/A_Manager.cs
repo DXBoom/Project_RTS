@@ -2,6 +2,7 @@
 using System.Threading;
 using UnityEngine;
 using System;
+using UnityEngine.Serialization;
 
 public class A_Manager : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class A_Manager : MonoBehaviour
     [Header("Grid Settings")] [Space]
     [SerializeField] private Vector3 worldPosition;
     [SerializeField] private Vector3 worldSize;
-    [SerializeField] private LayerMask unWalkableLayers;
+    [SerializeField] private LayerMask obstacle;
+    public GameObject newObstacle;
 
     [Header("A* Settings")] [Space]
     [SerializeField] private bool multiThreading = false;
@@ -153,7 +155,7 @@ public class A_Manager : MonoBehaviour
     #endregion
 
     #region Grid
-    private void CalculateWorldMapBorders()
+    public void CalculateWorldMapBorders()
     {
         _biggerBorderX = worldPosition.x + worldSize.x / 2;
         _smallerBorderX = worldPosition.x - worldSize.x / 2;
@@ -238,7 +240,7 @@ public class A_Manager : MonoBehaviour
         if (point1 == null || point2 == null)
             return false;
 
-        if(Physics.Linecast(point1.position,point2.position,unWalkableLayers))
+        if(Physics.Linecast(point1.position,point2.position,obstacle))
             return false;
         
         return true;
@@ -252,7 +254,7 @@ public class A_Manager : MonoBehaviour
         if (pointNodePosition.z > _biggerBorderZ || pointNodePosition.z < _smallerBorderZ)
             return false;
 
-        if (Physics.OverlapSphere(pointNodePosition, 0.2f, unWalkableLayers).Length > 0)
+        if (Physics.OverlapSphere(pointNodePosition, 0.2f, obstacle).Length > 0)
             return false;
 
         return true;
