@@ -8,18 +8,19 @@ public static class Save_Manager
     public static string directory = "SaveData";
     public static string filename = "Save.txt";
 
-    public static void Save(Save_Object saveObject)
+    public static void Save(Save_Object[] sObject)
     {
         if (!DirectoryExist())
             Directory.CreateDirectory(Application.persistentDataPath + "/" + directory);
         
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         FileStream file = File.Create(GetFullPath());
-        binaryFormatter.Serialize(file, saveObject);
+        All_Save_Objects data = new All_Save_Objects(sObject);
+        binaryFormatter.Serialize(file, data);
         file.Close();
     }
 
-    public static Save_Object Load()
+    public static All_Save_Objects Load()
     {
         if (SaveExist())
         {
@@ -27,7 +28,7 @@ public static class Save_Manager
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 FileStream file = File.Open(GetFullPath(), FileMode.Open);
-                Save_Object saveObject = (Save_Object)binaryFormatter.Deserialize(file);
+                All_Save_Objects saveObject = (All_Save_Objects)binaryFormatter.Deserialize(file);
                 file.Close();
 
                 return saveObject;
