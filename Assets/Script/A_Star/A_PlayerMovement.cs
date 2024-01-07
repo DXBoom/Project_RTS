@@ -95,7 +95,8 @@ public class A_PlayerMovement : MonoBehaviour
             Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
             GameObject newObstacleCreated = Instantiate(A_Manager.Instance.newObstacle, newHitPoint, Quaternion.identity);
             newObstacleCreated.transform.SetParent(A_Manager.Instance.obstacleParent.transform);
-
+            A_Manager.Instance.obstaclesList.Add(newObstacleCreated);
+            
             var cachedArray = Save_Load_Call.Instance.saveObjectObstacle;
             
             Save_Load_Call.Instance.saveObjectObstacle = new Save_Object_Obstacle[Save_Load_Call.Instance.saveObjectObstacle.Length + 1];

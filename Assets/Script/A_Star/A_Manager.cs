@@ -16,6 +16,7 @@ public class A_Manager : MonoBehaviour
     [SerializeField] private LayerMask obstacle;
     public GameObject obstacleParent;
     public GameObject newObstacle;
+    public List<GameObject> obstaclesList;
 
     [Header("A* Settings")] [Space]
     [SerializeField] private bool multiThreading = false;
