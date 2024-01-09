@@ -29,7 +29,7 @@ public static class Save_Manager
         file.Close();
     }
 
-    public static All_Save_Objects Load()
+    public static async Task<All_Save_Objects> Load()
     {
         if (SaveExist())
         {
@@ -37,10 +37,15 @@ public static class Save_Manager
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 FileStream file = File.Open(GetFullPath(), FileMode.Open);
-                All_Save_Objects saveObject = (All_Save_Objects)binaryFormatter.Deserialize(file);
-                file.Close();
 
-                return saveObject;
+                await Task.Run(() =>
+                {
+                    All_Save_Objects saveObject = (All_Save_Objects)binaryFormatter.Deserialize(file);
+                    Save_Load_Call.Instance.allSaveObjects = saveObject;
+                    
+                    file.Close();
+                    return saveObject;
+                });
             }
 
             catch

@@ -23,9 +23,6 @@ public class A_PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (isNowPlayer)
-                A_Manager.Instance.mainPlayerMove = true;
-            
-            if (isNowPlayer)
                 SetNewTarget();
         }
         
@@ -82,6 +79,9 @@ public class A_PlayerMovement : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
         {
+            if (isNowPlayer)
+                A_Manager.Instance.mainPlayerMove = true;
+            
             Vector3 newHitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
             _lastMouseClick = newHitPoint;
             PathRequest pathRequest = new PathRequest(transform.position, newHitPoint, OnRequestReceived);

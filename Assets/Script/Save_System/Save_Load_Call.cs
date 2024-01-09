@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class Save_Load_Call : MonoBehaviour
 {
     public static Save_Load_Call Instance;
-    
+
+    public All_Save_Objects allSaveObjects;
     public Save_Object_Obstacle[] saveObjectObstacle;
 
     private void Awake()
@@ -18,10 +20,10 @@ public class Save_Load_Call : MonoBehaviour
         Save_Manager.Save(saveObjectObstacle);
     }
 
-    public void Load()
+    public async void Load()
     {
-        //Load Obstacles
-        All_Save_Objects allSaveObjects = Save_Manager.Load();
+        await Save_Manager.Load();
+
         saveObjectObstacle = allSaveObjects.allSaveObjectsObstacle;
         LoadObstacles();
     }
