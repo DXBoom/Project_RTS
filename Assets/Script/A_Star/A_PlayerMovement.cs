@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class A_PlayerMovement : MonoBehaviour
 {
-    public float speed = 3;
-    public float stoppingDistance = 0.5f;
+    public PlayerData playerData;
     private Camera _camera;
     private Vector3[] _targetPath;
     private int _indexPath = 0;
@@ -49,14 +48,14 @@ public class A_PlayerMovement : MonoBehaviour
             return;
 
         RotateToTarget(_targetPath[_indexPath]);
-        transform.position = Vector3.MoveTowards(transform.position, _targetPath[_indexPath], speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _targetPath[_indexPath], playerData.speedMovement * Time.deltaTime);
         float distanceToTheNextWayPoint = Vector3.Distance(transform.position, _targetPath[_indexPath]);
         float distanceToFinaltWayPoint= Vector3.Distance(transform.position, _targetPath[_targetPath.Length - 1]);
 
         if (distanceToTheNextWayPoint < 0.05f)
             _indexPath++;
 
-        if (distanceToFinaltWayPoint < stoppingDistance)
+        if (distanceToFinaltWayPoint < playerData.stopDistance)
         {
             if (isNowPlayer)
                 A_Manager.Instance.mainPlayerMove = false;
@@ -91,6 +90,9 @@ public class A_PlayerMovement : MonoBehaviour
     
     private void SetNewTargetAfterNewObstacle()
     {
+        if (isNowPlayer)
+            A_Manager.Instance.mainPlayerMove = true;
+        
         PathRequest pathRequest = new PathRequest(transform.position, _lastMouseClick, OnRequestReceived);
         A_Manager.Instance.Request(pathRequest);
     }

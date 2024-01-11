@@ -2,6 +2,8 @@
 using System.Threading;
 using UnityEngine;
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
 public class A_Manager : MonoBehaviour
@@ -25,6 +27,9 @@ public class A_Manager : MonoBehaviour
     [Header("Player Data")] [Space] 
     public Vector3 mainPlayerPos;
     public bool mainPlayerMove;
+    public GameObject mainPlayerNow;
+
+    public GameObject canvasUI;
     
     private float _biggerBorderX;
     private float _smallerBorderX;
@@ -43,6 +48,8 @@ public class A_Manager : MonoBehaviour
     {
         CalculateWorldMapBorders();
         GenerateGrid();
+
+        StartCoroutine(ShowUIAfterStart());
     }
 
     private void Update()
@@ -50,6 +57,12 @@ public class A_Manager : MonoBehaviour
         CallBackTheResult();
     }
 
+    private IEnumerator ShowUIAfterStart()
+    {
+        yield return new WaitForSeconds(0.5f);
+        canvasUI.SetActive(true);
+    }
+    
     #region Manager
     public void FindingPath(PathRequest request ,Action<PathResponse> callBack)
     {
@@ -145,14 +158,26 @@ public class A_Manager : MonoBehaviour
         }
 
         pathNode.Reverse();
-        Vector3[] path = new Vector3[pathNode.Count ];
+        Vector3[] path = new Vector3[pathNode.Count];
 
-        for(int i=0; i< pathNode.Count  ;i++)
+        for(int i=0; i < pathNode.Count; i++)
         {
             pathNode[i].position.y = nodeYPos;
             path[i] = pathNode[i].position;
         }
         return path;
+    }
+
+    public void SetPlayer(GameObject player)
+    {
+        if (player.GetComponent<A_PlayerMovement>() != null)
+        {
+            mainPlayerNow.GetComponent<A_PlayerMovement>().isNowPlayer = false;
+            mainPlayerNow.GetComponent<MeshRenderer>().material = mainPlayerNow.GetComponent<A_PlayerMovement>().playerData.unSelectCharacter;
+            player.GetComponent<A_PlayerMovement>().isNowPlayer = true;
+            player.GetComponent<MeshRenderer>().material = player.GetComponent<A_PlayerMovement>().playerData.selectCharacter;
+            mainPlayerNow = player;
+        }
     }
     #endregion
 
@@ -190,8 +215,8 @@ public class A_Manager : MonoBehaviour
 
     private void BuildPointNode(Transform obstacle)
     {
-        float xSize = obstacle.transform.localScale.x / 2 + 0.7f;
-        float zSize = obstacle.transform.localScale.z / 2 + 0.7f;
+        float xSize = obstacle.transform.localScale.x / 2 + 1.2f;
+        float zSize = obstacle.transform.localScale.z / 2 + 1.2f;
 
         Vector3 forwardDirection = obstacle.forward * zSize;
         Vector3 rightDirection = obstacle.right * xSize;
@@ -202,6 +227,7 @@ public class A_Manager : MonoBehaviour
             for(int j=-1;j<=1;j=j+2)
             {
                 Vector3 pos = i * forwardDirection + j * rightDirection + obstacle.position;
+                pos.y = nodeYPos;
                 //Check the new point is Walkable
                 if (CheckIsWalk(pos))
                 {
