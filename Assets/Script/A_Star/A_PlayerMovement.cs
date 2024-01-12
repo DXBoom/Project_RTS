@@ -17,6 +17,8 @@ public class A_PlayerMovement : MonoBehaviour
             _camera = Camera.main;
 
         A_Manager.Instance.playersOnMap.Add(this.gameObject);
+        playerData.speedMovement = Random.Range(1f, 3f);
+        playerData.stopDistance = Random.Range(0.2f, 1f);
     }
 
     private void Update()
