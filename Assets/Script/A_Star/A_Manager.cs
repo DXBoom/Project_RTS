@@ -23,8 +23,10 @@ public class A_Manager : MonoBehaviour
     [Header("A* Settings")] [Space]
     [SerializeField] private bool multiThreading = false;
     [SerializeField] private float nodeYPos;
+    public GameObject targetImage;
 
     [Header("Player Data")] [Space] 
+    public bool durabilityOnOff;
     public Vector3 mainPlayerPos;
     public bool mainPlayerMove;
     public GameObject mainPlayerNow;
@@ -64,6 +66,11 @@ public class A_Manager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         canvasUI.SetActive(true);
+    }
+
+    public void ChangeDurabilityOnOff()
+    {
+        durabilityOnOff = !durabilityOnOff;
     }
     
     #region Manager

@@ -13,6 +13,7 @@ public class A_PlayerMovement : MonoBehaviour
     private Vector3 _lastMouseClick;
     public Slider sliderDurability;
     private bool rechargingDurabilityInProgress;
+    [SerializeField] private bool isMoving;
 
     private void Start()
     {
@@ -22,7 +23,8 @@ public class A_PlayerMovement : MonoBehaviour
         A_Manager.Instance.playersOnMap.Add(this.gameObject);
         playerData.speedMovement = Random.Range(1f, 3f);
         playerData.stopDistance = Random.Range(0.2f, 1f);
-        playerData.durability = Random.Range(10f, 100f);
+        playerData.durability = Random.Range(40f, 100f);
+        playerData.rotationSpeed = Random.Range(2f, 6f);
         sliderDurability.maxValue = playerData.durability;
         sliderDurability.value = playerData.durability;
     }
@@ -32,7 +34,7 @@ public class A_PlayerMovement : MonoBehaviour
         if (Save_Load_Call.Instance.loading || rechargingDurabilityInProgress)
             return;
 
-        if (sliderDurability.value <= 0 && !rechargingDurabilityInProgress)
+        if (sliderDurability.value <= 0 && !rechargingDurabilityInProgress && A_Manager.Instance.durabilityOnOff)
         {
             StartCoroutine(RechargeDurability());
             sliderDurability.value = 0f;
@@ -72,8 +74,21 @@ public class A_PlayerMovement : MonoBehaviour
             sliderDurability.value += 0.3f;
             yield return null;
         }
-        
         rechargingDurabilityInProgress = false;
+    }
+    
+    private IEnumerator RechargeDurabilityMoreZero()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        while (sliderDurability.value < sliderDurability.maxValue)
+        {
+            if (isMoving)
+                break;
+            
+            sliderDurability.value += 0.3f;
+            yield return null;
+        }
     }
 
     void MoveToTarget()
@@ -81,21 +96,32 @@ public class A_PlayerMovement : MonoBehaviour
         if (_indexPath >= _targetPath.Length)
             return;
 
+        isMoving = true;
         RotateToTarget(_targetPath[_indexPath]);
         transform.position = Vector3.MoveTowards(transform.position, _targetPath[_indexPath], playerData.speedMovement * Time.deltaTime);
         float distanceToTheNextWayPoint = Vector3.Distance(transform.position, _targetPath[_indexPath]);
         float distanceToFinaltWayPoint= Vector3.Distance(transform.position, _targetPath[_targetPath.Length - 1]);
 
-        sliderDurability.value -= A_Manager.Instance.durabilityCost;
-        
+        if (A_Manager.Instance.durabilityOnOff)
+            sliderDurability.value -= A_Manager.Instance.durabilityCost;
+
         if (distanceToTheNextWayPoint < 0.05f)
             _indexPath++;
 
         if (distanceToFinaltWayPoint < playerData.stopDistance)
         {
             if (isNowPlayer)
+            {
+                A_Manager.Instance.targetImage.SetActive(false);
                 A_Manager.Instance.mainPlayerMove = false;
+            }
 
+            if (isMoving)
+            {
+                StartCoroutine(RechargeDurabilityMoreZero());
+                isMoving = false;
+            }
+            
             if (!isNowPlayer && _randPos != Vector2.zero)
                 _randPos = Vector2.zero;
             
@@ -105,7 +131,9 @@ public class A_PlayerMovement : MonoBehaviour
 
     private void RotateToTarget(Vector3 target)
     {
-        transform.LookAt(target);
+        //transform.LookAt(target);
+        var targetRotation = Quaternion.LookRotation(target - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, playerData.rotationSpeed * Time.deltaTime);
     }
 
 
@@ -121,6 +149,9 @@ public class A_PlayerMovement : MonoBehaviour
             _lastMouseClick = newHitPoint;
             PathRequest pathRequest = new PathRequest(transform.position, newHitPoint, OnRequestReceived);
             A_Manager.Instance.Request(pathRequest);
+            A_Manager.Instance.targetImage.transform.position = new Vector3(hit.point.x,
+                A_Manager.Instance.targetImage.transform.position.y, hit.point.z);
+            A_Manager.Instance.targetImage.SetActive(true);
         }
     }
     
