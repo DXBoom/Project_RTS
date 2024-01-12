@@ -77,6 +77,7 @@ public class Save_Load_Call : MonoBehaviour
             }
         }
 
+        A_Manager.Instance.targetImage.SetActive(false);
         loading = false;
     }
     
