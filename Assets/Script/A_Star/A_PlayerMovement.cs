@@ -1,5 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class A_PlayerMovement : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class A_PlayerMovement : MonoBehaviour
     public bool isNowPlayer;
     private Vector2 _randPos = Vector2.zero;
     private Vector3 _lastMouseClick;
+    public Slider sliderDurability;
+    private bool rechargingDurabilityInProgress;
 
     private void Start()
     {
@@ -19,12 +22,22 @@ public class A_PlayerMovement : MonoBehaviour
         A_Manager.Instance.playersOnMap.Add(this.gameObject);
         playerData.speedMovement = Random.Range(1f, 3f);
         playerData.stopDistance = Random.Range(0.2f, 1f);
+        playerData.durability = Random.Range(10f, 100f);
+        sliderDurability.maxValue = playerData.durability;
+        sliderDurability.value = playerData.durability;
     }
 
     private void Update()
     {
-        if (Save_Load_Call.Instance.loading)
+        if (Save_Load_Call.Instance.loading || rechargingDurabilityInProgress)
             return;
+
+        if (sliderDurability.value <= 0 && !rechargingDurabilityInProgress)
+        {
+            StartCoroutine(RechargeDurability());
+            sliderDurability.value = 0f;
+            return;
+        }
         
         if (Input.GetMouseButtonDown(0))
         {
@@ -49,6 +62,20 @@ public class A_PlayerMovement : MonoBehaviour
         MoveToTarget();
     }
 
+    private IEnumerator RechargeDurability()
+    {
+        rechargingDurabilityInProgress = true;
+        yield return new WaitForSeconds(1.0f);
+
+        while (sliderDurability.value < sliderDurability.maxValue)
+        {
+            sliderDurability.value += 0.3f;
+            yield return null;
+        }
+        
+        rechargingDurabilityInProgress = false;
+    }
+
     void MoveToTarget()
     {
         if (_indexPath >= _targetPath.Length)
@@ -59,6 +86,8 @@ public class A_PlayerMovement : MonoBehaviour
         float distanceToTheNextWayPoint = Vector3.Distance(transform.position, _targetPath[_indexPath]);
         float distanceToFinaltWayPoint= Vector3.Distance(transform.position, _targetPath[_targetPath.Length - 1]);
 
+        sliderDurability.value -= A_Manager.Instance.durabilityCost;
+        
         if (distanceToTheNextWayPoint < 0.05f)
             _indexPath++;
 

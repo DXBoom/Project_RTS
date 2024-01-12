@@ -29,6 +29,7 @@ public class A_Manager : MonoBehaviour
     public bool mainPlayerMove;
     public GameObject mainPlayerNow;
     public List<GameObject> playersOnMap;
+    [Range(0.01f, 1f)] public float durabilityCost;
 
     [Header("UI")] [Space] 
     public GameObject canvasUI;

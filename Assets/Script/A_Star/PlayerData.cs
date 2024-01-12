@@ -7,6 +7,7 @@ public class PlayerData : ScriptableObject
 {
     public float speedMovement;
     public float stopDistance;
+    public float durability;
     public Material selectCharacter;
     public Material unSelectCharacter;
 }
