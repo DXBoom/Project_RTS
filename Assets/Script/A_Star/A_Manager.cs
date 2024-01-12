@@ -28,7 +28,9 @@ public class A_Manager : MonoBehaviour
     public Vector3 mainPlayerPos;
     public bool mainPlayerMove;
     public GameObject mainPlayerNow;
+    public List<GameObject> playersOnMap;
 
+    [Header("UI")] [Space] 
     public GameObject canvasUI;
     
     private float _biggerBorderX;
@@ -170,6 +172,11 @@ public class A_Manager : MonoBehaviour
 
     public void SetPlayer(GameObject player)
     {
+        for (int i = 0; i < A_Manager.Instance.playersOnMap.Count; i++)
+        {
+            A_Manager.Instance.playersOnMap[i].GetComponent<MeshRenderer>().material =  A_Manager.Instance.playersOnMap[i].GetComponent<A_PlayerMovement>().playerData.unSelectCharacter;
+        }
+        
         if (player.GetComponent<A_PlayerMovement>() != null)
         {
             mainPlayerNow.GetComponent<A_PlayerMovement>().isNowPlayer = false;

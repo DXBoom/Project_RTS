@@ -9,7 +9,7 @@ public static class Save_Manager
     public static string directory = "SaveData";
     public static string filename = "save.sav";
 
-    public static async void Save(Save_Object_Obstacle[] sObject)
+    public static async void Save(Save_Object_Obstacle[] sObject, Save_Object_Player[] sObjectPlayer)
     {
         if (!DirectoryExist())
             Directory.CreateDirectory(Application.persistentDataPath + "/" + directory);
@@ -19,7 +19,7 @@ public static class Save_Manager
        
         await Task.Run(() =>
         {
-            All_Save_Objects data = new All_Save_Objects(sObject);
+            All_Save_Objects data = new All_Save_Objects(sObject, sObjectPlayer);
             binaryFormatter.Serialize(file, data);
         });
 

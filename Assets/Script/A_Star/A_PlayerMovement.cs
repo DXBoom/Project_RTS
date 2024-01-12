@@ -5,8 +5,8 @@ public class A_PlayerMovement : MonoBehaviour
 {
     public PlayerData playerData;
     private Camera _camera;
-    private Vector3[] _targetPath;
-    private int _indexPath = 0;
+    public Vector3[] _targetPath;
+    public int _indexPath = 0;
     public bool isNowPlayer;
     private Vector2 _randPos = Vector2.zero;
     private Vector3 _lastMouseClick;
@@ -15,10 +15,15 @@ public class A_PlayerMovement : MonoBehaviour
     {
         if (_camera == null && Camera.main != null)
             _camera = Camera.main;
+
+        A_Manager.Instance.playersOnMap.Add(this.gameObject);
     }
 
     private void Update()
     {
+        if (Save_Load_Call.Instance.loading)
+            return;
+        
         if (Input.GetMouseButtonDown(0))
         {
             if (isNowPlayer)

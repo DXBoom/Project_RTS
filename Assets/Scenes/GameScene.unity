@@ -618,6 +618,7 @@ MonoBehaviour:
   mainPlayerPos: {x: 0, y: 0, z: 0}
   mainPlayerMove: 0
   mainPlayerNow: {fileID: 698707496}
+  playersOnMap: []
   canvasUI: {fileID: 760024201}
 --- !u!4 &370804370
 Transform:
@@ -1984,7 +1985,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allSaveObjects:
     allSaveObjectsObstacle: []
+    allSaveObjectsPlayer: []
   saveObjectObstacle: []
+  saveObjectPlayer: []
+  loading: 0
 --- !u!1 &1521410975
 GameObject:
   m_ObjectHideFlags: 0
