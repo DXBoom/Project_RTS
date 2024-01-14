@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Class with setting for players.
 [CreateAssetMenu]
 public class PlayerData : ScriptableObject
 {

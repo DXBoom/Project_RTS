@@ -64,6 +64,7 @@ public class A_PlayerMovement : MonoBehaviour
         MoveToTarget();
     }
 
+    //Recharge durability functions.
     private IEnumerator RechargeDurability()
     {
         rechargingDurabilityInProgress = true;
@@ -91,7 +92,8 @@ public class A_PlayerMovement : MonoBehaviour
         }
     }
 
-    void MoveToTarget()
+    //Moving character.
+    private void MoveToTarget()
     {
         if (_indexPath >= _targetPath.Length)
             return;
@@ -137,6 +139,7 @@ public class A_PlayerMovement : MonoBehaviour
     }
 
 
+    //Set a new target for moving.
     private void SetNewTarget()
     {
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
@@ -164,6 +167,7 @@ public class A_PlayerMovement : MonoBehaviour
         A_Manager.Instance.Request(pathRequest);
     }
 
+    //Creating new obstacles on the map.
     private void CreateNewObstacle()
     {
         Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
@@ -192,6 +196,7 @@ public class A_PlayerMovement : MonoBehaviour
         }
     }
     
+    //Set new target for moving for another players.
     private void SetNewTargetFromAnotherUnits()
     {
         if (_randPos == Vector2.zero)
